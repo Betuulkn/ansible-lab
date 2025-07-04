@@ -1,0 +1,7 @@
+# Variables pour le déploiement de quiz-ansible
+nodejs_version: "23"
+app_name: "quiz-ansible"
+app_repo: "https://github.com/franklin-tutorials/quiz-ansible.git"
+app_directory: "/opt/quiz-ansible"
+app_port: 3000
+app_user: "root"

@@ -1,0 +1,90 @@
+---
+
+- name: Mettre à jour le cache des paquets (Debian/Ubuntu)
+  apt:
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Mettre à jour le cache des paquets (RedHat/Rocky)
+  dnf:
+    update_cache: yes
+  when: ansible_os_family == "RedHat"
+
+
+- name: Installer Git (Debian/Ubuntu)
+  apt:
+    name: git
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Installer Git (RedHat/Rocky)
+  dnf:
+    name: 
+      - git
+      - procps-ng
+    state: present
+  when: ansible_os_family == "RedHat"
+
+
+- name: Télécharger le script d'installation Node.js (Debian/Ubuntu)
+  get_url:
+    url: "https://deb.nodesource.com/setup_{{ nodejs_version }}.x"
+    dest: /tmp/setup_node.sh
+    mode: '0755'
+  when: ansible_os_family == "Debian"
+
+- name: Télécharger le script d'installation Node.js (RedHat/Rocky)
+  get_url:
+    url: "https://rpm.nodesource.com/setup_{{ nodejs_version }}.x"
+    dest: /tmp/setup_node.sh
+    mode: '0755'
+  when: ansible_os_family == "RedHat"
+
+- name: Exécuter le script d'installation Node.js
+  command: bash /tmp/setup_node.sh
+
+- name: Installer Node.js (Debian/Ubuntu)
+  apt:
+    name: nodejs
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Installer Node.js (RedHat/Rocky)
+  dnf:
+    name: nodejs
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Cloner le dépôt de l'application
+  git:
+    repo: "{{ app_repo }}"
+    dest: "{{ app_directory }}"
+    version: HEAD
+    force: yes
+
+- name: Installer les dépendances npm
+  command: npm install
+  args:
+    chdir: "{{ app_directory }}"
+
+- name: Compiler l'application (build)
+  command: npm run build
+  args:
+    chdir: "{{ app_directory }}"
+
+- name: Installer le serveur statique "serve"
+  npm:
+    name: serve
+    global: yes
+    state: present
+
+- name: Lancer l'application avec "serve"
+  shell: "serve -s dist -l {{ app_port }}"
+  args:
+    chdir: "{{ app_directory }}"
+  async: 3600
+  poll: 0
+
+- name: Afficher l'URL d'accès
+  debug:
+    msg: "L'application {{ app_name }} est accessible sur http://{{ ansible_default_ipv4.address }}:{{ app_port }}"
