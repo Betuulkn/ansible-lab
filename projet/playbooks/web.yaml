@@ -1,0 +1,19 @@
+---
+- name: Installation d'Apache2 (version Docker)
+  hosts: localhost
+  become: true
+  become_user: root
+  tasks:
+    - name: Installer apache2
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+    
+    - name: Vérifier qu'Apache2 est installé
+      command: apache2 -v
+      register: apache_version
+    
+    - name: Afficher la version d'Apache2
+      debug:
+        msg: "Apache2 installé : {{ apache_version.stdout }}"

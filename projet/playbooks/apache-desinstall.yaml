@@ -1,0 +1,11 @@
+---
+- name: Désinstallation d'Apache2
+  hosts: localhost
+  become: true
+  become_user: root
+  tasks:
+    - name: Désinstaller apache2
+      apt:
+        name: apache2
+        state: absent
+        purge: yes

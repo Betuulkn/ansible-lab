@@ -1,0 +1,26 @@
+---
+- name: Exécuter un script shell sur la machine distante
+  hosts: localhost
+  tasks:
+    - name: Copier le script vers la machine distante
+      copy:
+        src: /root/script1.sh
+        dest: /root/script1.sh
+        mode: '0755'
+    
+    - name: Exécuter le script
+      shell: /root/script1.sh
+      register: script_result
+    
+    - name: Afficher le résultat du script
+      debug:
+        msg: "{{ script_result.stdout }}"
+    
+    - name: Vérifier que le fichier test1 a été créé
+      stat:
+        path: /root/test1
+      register: test_file
+    
+    - name: Confirmer la création du fichier
+      debug:
+        msg: "Fichier /root/test1 existe : {{ test_file.stat.exists }}"

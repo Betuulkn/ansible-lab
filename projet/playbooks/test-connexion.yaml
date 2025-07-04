@@ -1,0 +1,10 @@
+---
+- name: Test de connexion SSH
+  hosts: localhost
+  tasks:
+    - name: Tester la connectivité locale
+      ping:
+    
+    - name: Afficher les informations système
+      debug:
+        msg: "Système : {{ ansible_distribution }} {{ ansible_distribution_version }}"

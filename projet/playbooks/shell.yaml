@@ -1,0 +1,11 @@
+---
+- name: Test du module shell avec pipe
+  hosts: localhost
+  tasks:
+    - name: Exécuter cat /etc/passwd | grep root avec shell
+      shell: cat /etc/passwd | grep root
+      register: shell_result
+    
+    - name: Afficher le résultat du module shell
+      debug:
+        msg: "Résultat shell : {{ shell_result.stdout_lines }}"

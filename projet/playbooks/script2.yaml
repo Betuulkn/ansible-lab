@@ -1,0 +1,20 @@
+---
+- name: Transférer et exécuter un script avec le module script
+  hosts: localhost
+  tasks:
+    - name: Exécuter script2.sh avec le module script
+      script: /root/script2.sh
+      register: script_execution
+    
+    - name: Afficher la sortie du script
+      debug:
+        msg: "{{ script_execution.stdout_lines }}"
+    
+    - name: Vérifier que test2 a été créé
+      stat:
+        path: /root/test2
+      register: test2_file
+    
+    - name: Confirmer la création de test2
+      debug:
+        msg: "Fichier /root/test2 créé : {{ test2_file.stat.exists }}"

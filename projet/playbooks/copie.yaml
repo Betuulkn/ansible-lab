@@ -1,0 +1,18 @@
+---
+- name: Copier un fichier vers les machines distantes
+  hosts: localhost
+  tasks:
+    - name: Copier le fichier sdv.conf vers /tmp
+      copy:
+        src: /root/sdv.conf
+        dest: /tmp/sdv.conf
+        mode: '0644'
+    
+    - name: Vérifier que le fichier a été copié
+      stat:
+        path: /tmp/sdv.conf
+      register: file_copied
+    
+    - name: Afficher le résultat de la copie
+      debug:
+        msg: "Fichier copié avec succès : {{ file_copied.stat.exists }}"

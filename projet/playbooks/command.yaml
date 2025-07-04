@@ -1,0 +1,12 @@
+---
+- name: Test du module command avec pipe
+  hosts: localhost
+  tasks:
+    - name: Essayer d'exécuter cat /etc/passwd | grep root avec command
+      command: cat /etc/passwd | grep root
+      register: command_result
+      ignore_errors: yes
+    
+    - name: Afficher le résultat du module command
+      debug:
+        msg: "Résultat command : {{ command_result }}"

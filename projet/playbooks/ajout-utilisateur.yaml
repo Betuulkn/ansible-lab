@@ -1,0 +1,29 @@
+---
+- name: Créer un utilisateur sur les machines distantes
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Créer l'utilisateur pierre
+      user:
+        name: pierre
+        home: /home/pierre
+        shell: /bin/bash
+        create_home: yes
+        state: present
+    
+    - name: Vérifier la création de l'utilisateur
+      shell: id pierre
+      register: user_check
+    
+    - name: Afficher les informations de l'utilisateur
+      debug:
+        msg: "{{ user_check.stdout }}"
+    
+    - name: Vérifier le répertoire personnel
+      stat:
+        path: /home/pierre
+      register: home_dir
+    
+    - name: Confirmer la création du répertoire
+      debug:
+        msg: "Répertoire /home/pierre existe : {{ home_dir.stat.exists }}"

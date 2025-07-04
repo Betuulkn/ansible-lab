@@ -1,0 +1,14 @@
+---
+- name: Créer dynamiquement un fichier avec un nom variable
+  hosts: localhost
+  become: true
+
+  vars:
+    nom_fichier: toto
+
+  tasks:
+    - name: Créer le fichier vide dans /tmp
+      file:
+        path: "/tmp/{{ nom_fichier }}.log"
+        state: touch
+        mode: '0644'
